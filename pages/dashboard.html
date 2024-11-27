@@ -8,23 +8,56 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/general.css">
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-img-top {
+            height: 200px; /* Set fixed height for all images */
+            object-fit: cover; /* Ensure image covers the area without stretching */
+            border-bottom: 1px solid #ddd;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        #image-preview {
+            max-height: 200px;
+            object-fit: cover;
+            width: 100%;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div class="sidebar" id="sidebar" style="background-color: #554f4a;">
         <div class="logo" style="padding-top: 45px;">
-            <!-- Profile Section at Bottom of Sidebar -->
-        <div class="profile-header" id="profile-header">
-            <img src="../assets/img/profile-user.png" alt="Profile" id="profile-img">
-            <h2 id="user-name">Loading...</h2>
-        </div>
+            <div class="profile-header" id="profile-header">
+                <img src="../assets/img/profile.png" alt="Profile" id="profile-img">
+                <h2 id="user-name">Loading...</h2>
+            </div>
         </div>
         <ul>
             <a href="dashboard.html">
                 <li class="active">Dashboard</li>
             </a>
             <a href="add.html">
-                <li>Add New Heritage</li>
+                <li>Add New Timeline</li>
             </a>
             <a href="reports.html">
                 <li>Heritage Reports</li>
@@ -33,14 +66,10 @@
                 <li>Logout</li>
             </a>
         </ul>
-
-        
     </div>
 
     <div class="header" style="background-color: #5b4a3f;">
         <span class="hamburger" id="hamburger"><i class="fas fa-bars"></i></span>
-
-        <!-- Replace Profile Block with Logo -->
         <div class="logo">
             <h3>THT of Bukidnon</h3>
             <p>*Preserving Culture and Tradition*</p>
@@ -48,74 +77,165 @@
     </div>
 
     <div class="content" id="content">
-        <h3>Welcome to the Dashboard!</h3>
-
-        <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search by Location" />
-
-        <!-- Cards Container -->
+        <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search by Title, Festival, or Description" />
         <div class="row" id="cards-container"></div>
+    </div>
+
+    <!-- Modal for Editing -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Timeline</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="editDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFestival" class="form-label">Festival</label>
+                            <input type="text" class="form-control" id="editFestival" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editImage" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="editImage" accept="image/*" required>
+                            <img id="image-preview" src="" alt="Image Preview" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const cardsContainer = document.getElementById("cards-container");
             const searchBar = document.getElementById("search-bar");
-    
+
             // Retrieve data from localStorage
             const storedData = JSON.parse(localStorage.getItem("contentData")) || [];
-    
+
             // Function to display cards
             function displayCards(data) {
-                // Clear existing cards
                 cardsContainer.innerHTML = "";
-    
-                // Generate cards dynamically
+
                 data.forEach((content, index) => {
                     const card = document.createElement("div");
                     card.className = "col-md-4 card";
-    
+
                     card.innerHTML = `
                         <div class="card-body">
-                            <img src="${content.image}" class="card-img" alt="${content.title}">
-                            <h5 class="card-title" style="font-weight: bold; font-size: 20px;">${content.title}</h5>
+                            <img src="${content.image}" class="card-img-top" alt="${content.title}">
+                            <h5 class="card-title">${content.title}</h5>
+                            <p><strong>Date:</strong> ${content.date}</p>
+                            <p><strong>Festival:</strong> ${content.festival}</p>
                             <p class="card-text">${content.description}</p>
+                            <button class="btn btn-warning edit-btn" data-index="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
                             <button class="btn btn-danger delete-btn" data-index="${index}">Delete</button>
                         </div>
                     `;
-    
+
                     cardsContainer.appendChild(card);
                 });
-    
-                // Add delete functionality to each card
+
+                // Add delete functionality
                 document.querySelectorAll(".delete-btn").forEach((button) => {
                     button.addEventListener("click", function () {
                         const index = this.getAttribute("data-index");
                         storedData.splice(index, 1);
                         localStorage.setItem("contentData", JSON.stringify(storedData));
-                        displayCards(storedData); // Re-display updated cards
+                        displayCards(storedData);
+                    });
+                });
+
+                // Add edit functionality
+                document.querySelectorAll(".edit-btn").forEach((button) => {
+                    button.addEventListener("click", function () {
+                        const index = this.getAttribute("data-index");
+                        const content = storedData[index];
+                        document.getElementById("editTitle").value = content.title;
+                        document.getElementById("editDate").value = content.date;
+                        document.getElementById("editFestival").value = content.festival;
+                        document.getElementById("editDescription").value = content.description;
+
+                        // Show the image preview if an image is selected
+                        const preview = document.getElementById("image-preview");
+                        preview.src = content.image;
+                        preview.style.display = content.image ? "block" : "none";
+
+                        // Handle form submission to update the data
+                        const editForm = document.getElementById("editForm");
+                        editForm.onsubmit = function (e) {
+                            e.preventDefault();
+
+                            // Update content with new values
+                            content.title = document.getElementById("editTitle").value;
+                            content.date = document.getElementById("editDate").value;
+                            content.festival = document.getElementById("editFestival").value;
+                            content.description = document.getElementById("editDescription").value;
+
+                            // Handle file upload for image
+                            const imageInput = document.getElementById("editImage");
+                            if (imageInput.files && imageInput.files[0]) {
+                                const reader = new FileReader();
+                                reader.onload = function (e) {
+                                    content.image = e.target.result; // Store the base64 image
+                                    localStorage.setItem("contentData", JSON.stringify(storedData));
+                                    displayCards(storedData); // Re-display the updated cards
+                                    
+                                    // Show success alert and close modal
+                                    alert("Changes saved successfully!");
+                                    const modal = new bootstrap.Modal(document.getElementById("editModal"));
+                                    modal.hide();
+                                };
+                                reader.readAsDataURL(imageInput.files[0]);
+                            } else {
+                                // If no new image, just save changes
+                                localStorage.setItem("contentData", JSON.stringify(storedData));
+                                displayCards(storedData);
+                                 
+                                // Show success alert and close modal
+                                alert("Changes saved successfully!");
+                                const modal = new bootstrap.Modal(document.getElementById("editModal"));
+                                modal.hide();
+                            }
+                        };
                     });
                 });
             }
-    
-            // Display all cards initially
+
+            // Display the initial cards
             displayCards(storedData);
-    
-            // Add event listener to the search bar
+
+            // Search functionality
             searchBar.addEventListener("input", function () {
-                const searchQuery = searchBar.value.toLowerCase();
-    
-                // Filter data based on the search query
-                const filteredData = storedData.filter((content) =>
-                    content.title.toLowerCase().includes(searchQuery) ||
-                    content.description.toLowerCase().includes(searchQuery)
-                );
-    
-                // Display filtered cards
+                const query = searchBar.value.toLowerCase();
+                const filteredData = storedData.filter((content) => {
+                    return (
+                        content.title.toLowerCase().includes(query) ||
+                        content.festival.toLowerCase().includes(query) ||
+                        content.description.toLowerCase().includes(query)
+                    );
+                });
                 displayCards(filteredData);
             });
         });
     </script>
-    
-    <script src="../assets/js/dashboard.js"></script>
+
+<script src="../assets/js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
