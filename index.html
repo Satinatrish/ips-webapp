@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tribal Heritage Timeline of Bukidnon</title>
+    <link rel="stylesheet" href="assets/css/index.css">
+</head>
+<style>
+    header {
+  background-color: #5b4a3f;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+header h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: white;
+}
+
+.auth-buttons {
+  display: flex;
+}
+
+.auth-buttons button {
+  background-color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.auth-buttons button:hover {
+  background-color: #e5e5e5;
+}
+footer{
+    background-color: #797979;
+}
+</style>
+<body>
+    <header style="background-color: #5b4a3f; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <h1 style="margin: 0; font-size: 1.2rem; color: white;">Tribal Heritage Timeline of Bukidnon</h1>
+        <div class="auth-buttons">
+          <button id="loginBtn" style="color: #5b4a3f; margin-right: 10px;">Login</button>
+          <button id="signUpBtn" style="color: #5b4a3f;">Sign Up</button>
+        </div>
+      </header>
+
+    <!-- Auto-Scrolling Banner -->
+    <div class="banner">
+        <div class="banner-images" id="banner-images">
+            <div class="banner-image">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6HNINebd5gSjKzBEmNsm__RoYWe6PwBQcDw&s" alt="Tribal Dance">
+                <div class="banner-description">Experience Traditional Bukidnon Dances</div>
+            </div>
+            <div class="banner-image">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcFYOrgBA2CAQHmQooyu_2cSw5nEOdU7LmFw&s" alt="Tribal Weaving">
+                <div class="banner-description">Discover Intricate Handwoven Patterns</div>
+            </div>
+            <div class="banner-image">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ7_YIMyaa_kPaim4VONEsujsWZKEYNVdOgA&s" alt="Tribal Festivals">
+                <div class="banner-description">Celebrate the Vibrant Festivals of Bukidnon</div>
+            </div>
+        </div>
+    </div>
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>We are committed to documenting and showcasing the diverse heritage of Bukidnon's Indigenous Peoples. Our mission is to educate, inspire, and connect people through the timeless stories of the region's tribal communities.</p>
+    </section>
+
+    <section id="features">
+        <h2>Why Explore with Us?</h2>
+        <div class="features">
+            <div class="feature-card">
+                <img src="assets/img/cultural.png" alt="Cultural Preservation">
+                <h3>Cultural Preservation</h3>
+                <p>Support the preservation of Bukidnon's rich tribal traditions and practices.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/img/map.png" alt="Heritage Locations">
+                <h3>Heritage Locations</h3>
+                <p>Discover key landmarks and places of significance to Bukidnon's tribes.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/img/community.png" alt="Community Engagement">
+                <h3>Community Engagement</h3>
+                <p>Connect with tribal communities and learn about their way of life.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <span class="link" id="toSignUp">Don't have an account? Sign up</span>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal" id="signUpModal">
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <input type="text" id="signUpName" placeholder="Name" required>
+            <input type="email" id="signUpEmail" placeholder="Email" required>
+            <input type="password" id="signUpPassword" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+        </form>
+        <span class="link" id="toLogin">Already have an account? Login</span>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <footer>
+        &copy; 2024 Tribal Heritage Timeline of Bukidnon. All rights reserved.
+    </footer>
+
+    <script src="assets/js/banner.js"></script>
+    <script src="assets/js/modal.js"></script>
+</body>
+</html>
