@@ -4,82 +4,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard Calendar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/css/general.css">
-    <style>
-        .card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-img-top {
-            height: 200px; /* Set fixed height for all images */
-            object-fit: cover; /* Ensure image covers the area without stretching */
-            border-bottom: 1px solid #ddd;
-        }
-
-        .card-title {
-            font-weight: bold;
-            font-size: 20px;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-        }
-
-        #image-preview {
-            max-height: 200px;
-            object-fit: cover;
-            width: 100%;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/add.css">
 </head>
+<style>
+    #viewImage {
+    height: 300px;
+    object-fit: cover;  /* Ensures the image scales without distorting */
+    width: 100%;        /* Ensures the image takes up the full width of its container */
+}
 
+</style>
 <body>
-    <div class="sidebar" id="sidebar" style="background-color: #554f4a;">
-        <div class="logo" style="padding-top: 45px;">
-            <div class="profile-header" id="profile-header">
-                <img src="../assets/img/profile.png" alt="Profile" id="profile-img">
-                <h2 id="user-name">Loading...</h2>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar" style="background-color: #554f4a;">
+    <div class="logo" style="padding-top: 45px;">
+        <div class="profile-header" id="profile-header">
+            <img src="../assets/img/profile.png" alt="Profile" id="profile-img">
+            <h2 id="user-name">Loading...</h2>
+        </div>
+    </div>
+    <ul>
+        <a href="dashboard.html">
+            <li class="active">Dashboard</li>
+        </a>
+        <a href="add.html">
+            <li>Add New Timeline</li>
+        </a>
+        <a href="reports.html">
+            <li>Timeline Reports</li>
+        </a>
+        <a href="#" id="logout-link">
+            <li>Logout</li>
+        </a>
+    </ul>
+</div>
+
+<!-- Header -->
+<div class="header" style="background-color: #5b4a3f;">
+    <span class="hamburger" id="hamburger"><i class="fas fa-bars"></i></span>
+    <div class="logo">
+        <h3>THT of Bukidnon</h3>
+        <p>*Preserving Culture and Tradition*</p>
+    </div>
+</div>
+
+
+    <!-- Main Content -->
+    <div class="content" id="content">
+    <div class="container">
+        <h1 class="text-center">Dashboard Calendar</h1>
+            <div class="calendar-container">
+        <div class="calendar-header">
+            <button class="btn btn-sm btn-primary" id="prevMonth">&laquo; Previous</button>
+            <h4 id="monthYear"></h4>
+            <button class="btn btn-sm btn-primary" id="nextMonth">Next &raquo;</button>
+        </div>
+
+        <div class="calendar" id="calendar"></div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal for Viewing Timeline -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">Timeline Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="viewImage" src="" alt="Timeline Image" class="img-fluid">
+                <h5 id="viewTitle"></h5>
+                <p><strong>Date:</strong> <span id="viewDate"></span></p>
+                <p><strong>Festival:</strong> <span id="viewFestival"></span></p>
+                <p id="viewDescription"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="deleteBtn">Delete</button>
+                <button class="btn btn-warning" id="editBtn" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
             </div>
         </div>
-        <ul>
-            <a href="dashboard.html">
-                <li class="active">Dashboard</li>
-            </a>
-            <a href="add.html">
-                <li>Add New Timeline</li>
-            </a>
-            <a href="reports.html">
-                <li>Timeline Reports</li>
-            </a>
-            <a href="#" id="logout-link">
-                <li>Logout</li>
-            </a>
-        </ul>
     </div>
+</div>
 
-    <div class="header" style="background-color: #5b4a3f;">
-        <span class="hamburger" id="hamburger"><i class="fas fa-bars"></i></span>
-        <div class="logo">
-            <h3>THT of Bukidnon</h3>
-            <p>*Preserving Culture and Tradition*</p>
-        </div>
-    </div>
-
-    <div class="content" id="content">
-        <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search by Title, Festival, or Description" />
-        <div class="row" id="cards-container"></div>
-    </div>
 
     <!-- Modal for Editing -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
@@ -91,6 +103,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="editForm">
+                        <input type="hidden" id="editIndex">
                         <div class="mb-3">
                             <label for="editTitle" class="form-label">Title</label>
                             <input type="text" class="form-control" id="editTitle" required>
@@ -110,7 +123,6 @@
                         <div class="mb-3">
                             <label for="editImage" class="form-label">Image</label>
                             <input type="file" class="form-control" id="editImage" accept="image/*" required>
-                            <img id="image-preview" src="" alt="Image Preview" />
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                     </form>
@@ -119,123 +131,171 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const cardsContainer = document.getElementById("cards-container");
-            const searchBar = document.getElementById("search-bar");
-
-            // Retrieve data from localStorage
-            const storedData = JSON.parse(localStorage.getItem("contentData")) || [];
-
-            // Function to display cards
-            function displayCards(data) {
-                cardsContainer.innerHTML = "";
-
-                data.forEach((content, index) => {
-                    const card = document.createElement("div");
-                    card.className = "col-md-4 card";
-
-                    card.innerHTML = `
-                        <div class="card-body">
-                            <img src="${content.image}" class="card-img-top" alt="${content.title}">
-                            <h5 class="card-title">${content.title}</h5>
-                            <p><strong>Date:</strong> ${content.date}</p>
-                            <p><strong>Festival:</strong> ${content.festival}</p>
-                            <p class="card-text">${content.description}</p>
-                            <button class="btn btn-warning edit-btn" data-index="${index}" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
-                            <button class="btn btn-danger delete-btn" data-index="${index}">Delete</button>
-                        </div>
-                    `;
-
-                    cardsContainer.appendChild(card);
-                });
-
-                // Add delete functionality
-                document.querySelectorAll(".delete-btn").forEach((button) => {
-                    button.addEventListener("click", function () {
-                        const index = this.getAttribute("data-index");
-                        storedData.splice(index, 1);
-                        localStorage.setItem("contentData", JSON.stringify(storedData));
-                        displayCards(storedData);
-                    });
-                });
-
-                // Add edit functionality
-                document.querySelectorAll(".edit-btn").forEach((button) => {
-                    button.addEventListener("click", function () {
-                        const index = this.getAttribute("data-index");
-                        const content = storedData[index];
-                        document.getElementById("editTitle").value = content.title;
-                        document.getElementById("editDate").value = content.date;
-                        document.getElementById("editFestival").value = content.festival;
-                        document.getElementById("editDescription").value = content.description;
-
-                        // Show the image preview if an image is selected
-                        const preview = document.getElementById("image-preview");
-                        preview.src = content.image;
-                        preview.style.display = content.image ? "block" : "none";
-
-                        // Handle form submission to update the data
-                        const editForm = document.getElementById("editForm");
-                        editForm.onsubmit = function (e) {
-                            e.preventDefault();
-
-                            // Update content with new values
-                            content.title = document.getElementById("editTitle").value;
-                            content.date = document.getElementById("editDate").value;
-                            content.festival = document.getElementById("editFestival").value;
-                            content.description = document.getElementById("editDescription").value;
-
-                            // Handle file upload for image
-                            const imageInput = document.getElementById("editImage");
-                            if (imageInput.files && imageInput.files[0]) {
-                                const reader = new FileReader();
-                                reader.onload = function (e) {
-                                    content.image = e.target.result; // Store the base64 image
-                                    localStorage.setItem("contentData", JSON.stringify(storedData));
-                                    displayCards(storedData); // Re-display the updated cards
-                                    
-                                    // Show success alert and close modal
-                                    alert("Changes saved successfully!");
-                                    const modal = new bootstrap.Modal(document.getElementById("editModal"));
-                                    modal.hide();
-                                };
-                                reader.readAsDataURL(imageInput.files[0]);
-                            } else {
-                                // If no new image, just save changes
-                                localStorage.setItem("contentData", JSON.stringify(storedData));
-                                displayCards(storedData);
-                                 
-                                // Show success alert and close modal
-                                alert("Changes saved successfully!");
-                                const modal = new bootstrap.Modal(document.getElementById("editModal"));
-                                modal.hide();
-                            }
-                        };
-                    });
-                });
-            }
-
-            // Display the initial cards
-            displayCards(storedData);
-
-            // Search functionality
-            searchBar.addEventListener("input", function () {
-                const query = searchBar.value.toLowerCase();
-                const filteredData = storedData.filter((content) => {
-                    return (
-                        content.title.toLowerCase().includes(query) ||
-                        content.festival.toLowerCase().includes(query) ||
-                        content.description.toLowerCase().includes(query)
-                    );
-                });
-                displayCards(filteredData);
-            });
-        });
-    </script>
-
-<script src="../assets/js/dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const calendarEl = document.getElementById("calendar");
+        const monthYearEl = document.getElementById("monthYear");
+        const prevMonthBtn = document.getElementById("prevMonth");
+        const nextMonthBtn = document.getElementById("nextMonth");
+
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        const storedData = JSON.parse(localStorage.getItem("timelineData")) || [];
+
+        function renderCalendar(month, year) {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    calendarEl.innerHTML = '<div class="header" style="background-color:red;">Sun</div><div class="header">Mon</div><div class="header">Tue</div><div class="header">Wed</div><div class="header">Thu</div><div class="header">Fri</div><div class="header" style="background-color:yellow; color:black;">Sat</div>';
+
+    for (let i = 0; i < firstDay; i++) {
+        calendarEl.innerHTML += '<div class="calendar-day hidden"></div>';
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const formattedDate = date.toLocaleDateString('en-CA'); // Local date in 'YYYY-MM-DD'
+
+        const dayData = storedData.filter(item => item.date === formattedDate);
+        let timelineTitles = dayData.map(item => `<div class="timeline">${item.title}</div>`).join("");
+
+        calendarEl.innerHTML += `
+            <div class="calendar-day" data-date="${formattedDate}">
+                <div class="date">${day}</div>
+                ${timelineTitles}
+            </div>
+        `;
+    }
+
+    monthYearEl.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    document.querySelectorAll('.calendar-day').forEach(day => {
+        day.addEventListener('click', function () {
+            const selectedDate = this.getAttribute('data-date');
+            showTimelineModal(selectedDate);
+        });
+    });
+}
+
+
+function showTimelineModal(date) {
+    const dayData = storedData.find(item => item.date === date);
+    if (dayData) {
+        document.getElementById('viewImage').src = dayData.image;
+        document.getElementById('viewTitle').textContent = dayData.title;
+
+        const localDateString = new Date(dayData.date).toLocaleDateString('en-CA'); // Format as 'YYYY-MM-DD'
+        document.getElementById('viewDate').textContent = localDateString;
+
+        document.getElementById('viewFestival').textContent = dayData.festival;
+        document.getElementById('viewDescription').textContent = dayData.description;
+        document.getElementById('deleteBtn').onclick = function () {
+            deleteTimeline(dayData);
+        };
+        document.getElementById('editBtn').onclick = function () {
+            loadEditForm(dayData);
+        };
+        new bootstrap.Modal(document.getElementById('viewModal')).show();
+    }
+}
+
+
+function deleteTimeline(data) {
+    // Show confirmation alert before proceeding
+    const confirmation = confirm("Are you sure you want to delete this data?");
+    if (confirmation) {
+        // Find the index of the data to be deleted
+        const index = storedData.findIndex(item => item.date === data.date && item.title === data.title);
+        
+        // If found, remove the item and update local storage
+        if (index !== -1) {
+            storedData.splice(index, 1);
+            localStorage.setItem('timelineData', JSON.stringify(storedData));
+            renderCalendar(currentMonth, currentYear);  // Re-render the calendar
+            new bootstrap.Modal(document.getElementById('viewModal')).hide();  // Close the modal
+
+            // Show success alert
+            alert("Data successfully deleted!");
+        }
+    }
+}
+
+
+        function loadEditForm(data) {
+    document.getElementById('editIndex').value = data.date;
+    document.getElementById('editTitle').value = data.title;
+    
+    // Adjust the date for the local timezone
+    const localDate = new Date(data.date);
+    const localDateString = localDate.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
+    
+    document.getElementById('editDate').value = localDateString;
+    document.getElementById('editFestival').value = data.festival;
+    document.getElementById('editDescription').value = data.description;
+}
+
+
+        renderCalendar(currentMonth, currentYear);
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        // Optional: Add new timeline data via form submission
+        const editForm = document.getElementById("editForm");
+editForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Collect the updated data
+    const updatedData = {
+        title: document.getElementById("editTitle").value,
+        date: document.getElementById("editDate").value,
+        festival: document.getElementById("editFestival").value,
+        description: document.getElementById("editDescription").value,
+        image: document.getElementById("editImage").files[0] ? URL.createObjectURL(document.getElementById("editImage").files[0]) : ''
+    };
+
+    // Get the index of the data to be updated
+    const editIndex = document.getElementById("editIndex").value;
+    const index = storedData.findIndex(item => item.date === editIndex);
+
+    if (index !== -1) {
+        // Update the data in the stored array
+        storedData[index] = updatedData;
+        
+        // Save the updated data in local storage
+        localStorage.setItem("timelineData", JSON.stringify(storedData));
+
+        // Re-render the calendar
+        renderCalendar(currentMonth, currentYear);
+
+        // Alert the user that the data has been saved
+        alert("Data successfully saved!");
+
+        // Hide the modal after saving the data
+        new bootstrap.Modal(document.getElementById("editModal")).hide();
+    }
+});
+
+
+    </script>
+<script src="../assets/js/dashboard.js"></script>
+
 </body>
 
 </html>

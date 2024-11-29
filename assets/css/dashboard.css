@@ -1,0 +1,48 @@
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .calendar-day {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendar-day .date {
+            font-weight: bold;
+        }
+
+        .calendar-day .timeline {
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+        .calendar .header {
+            grid-column: span 7;
+            text-align: center;
+        }
+
+        .modal img {
+            width: 100%;
+            height: auto;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
