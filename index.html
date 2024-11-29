@@ -1,129 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tribal Heritage Timeline of Bukidnon</title>
-    <link rel="stylesheet" href="assets/css/index.css">
+    <title>Dashboard Calendar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/general.css">
+    <link rel="stylesheet" href="assets/css/add.css">
 </head>
 <style>
-    header {
-  background-color: #5b4a3f;
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
+    #viewImage {
+    height: 300px;
+    object-fit: cover;  /* Ensures the image scales without distorting */
+    width: 100%;        /* Ensures the image takes up the full width of its container */
 }
 
-header h1 {
-  font-size: 1.2rem;
-  margin: 0;
-  color: white;
-}
-
-.auth-buttons {
-  display: flex;
-}
-
-.auth-buttons button {
-  background-color: white;
-  border: none;
-  padding: 5px 10px;
-  margin-left: 10px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.auth-buttons button:hover {
-  background-color: #e5e5e5;
-}
-footer{
-    background-color: #797979;
-}
 </style>
 <body>
-    <header style="background-color: #5b4a3f; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <h1 style="margin: 0; font-size: 1.2rem; color: white;">Tribal Heritage Timeline of Bukidnon</h1>
-        <div class="auth-buttons">
-          <button id="loginBtn" style="color: #5b4a3f; margin-right: 10px;">Login</button>
-          <button id="signUpBtn" style="color: #5b4a3f;">Sign Up</button>
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar" style="background-color: #554f4a;">
+    <div class="logo" style="padding-top: 45px;">
+        <div class="profile-header" id="profile-header">
+            <img src="assets/img/profile.png" alt="Profile" id="profile-img">
+            <h2 id="user-name">Loading...</h2>
         </div>
-      </header>
+    </div>
+    <ul>
+        <a href="index.html">
+            <li class="active">Dashboard</li>
+        </a>
+        <a href="add.html">
+            <li>Add New Timeline</li>
+        </a>
+        <a href="reports.html">
+            <li>Timeline Reports</li>
+        </a>
+        <!--
+        <a href="#" id="logout-link">
+            <li>Logout</li>
+        </a>
+        -->
+    </ul>
+</div>
 
-    <!-- Auto-Scrolling Banner -->
-    <div class="banner">
-        <div class="banner-images" id="banner-images">
-            <div class="banner-image">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6HNINebd5gSjKzBEmNsm__RoYWe6PwBQcDw&s" alt="Tribal Dance">
-                <div class="banner-description">Experience Traditional Bukidnon Dances</div>
+<!-- Header -->
+<div class="header" style="background-color: #5b4a3f;">
+    <span class="hamburger" id="hamburger"><i class="fas fa-bars"></i></span>
+    <div class="logo">
+        <h3>THT of Bukidnon</h3>
+        <p>*Preserving Culture and Tradition*</p>
+    </div>
+</div>
+
+
+    <!-- Main Content -->
+    <div class="content" id="content">
+    <div class="container">
+        <h1 class="text-center">Dashboard Calendar</h1>
+            <div class="calendar-container">
+        <div class="calendar-header">
+            <button class="btn btn-sm btn-primary" id="prevMonth">&laquo; Previous</button>
+            <h4 id="monthYear"></h4>
+            <button class="btn btn-sm btn-primary" id="nextMonth">Next &raquo;</button>
+        </div>
+
+        <div class="calendar" id="calendar"></div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal for Viewing Timeline -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">Timeline Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="banner-image">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcFYOrgBA2CAQHmQooyu_2cSw5nEOdU7LmFw&s" alt="Tribal Weaving">
-                <div class="banner-description">Discover Intricate Handwoven Patterns</div>
+            <div class="modal-body">
+                <img id="viewImage" src="" alt="Timeline Image" class="img-fluid">
+                <h5 id="viewTitle"></h5>
+                <p><strong>Date:</strong> <span id="viewDate"></span></p>
+                <p><strong>Festival:</strong> <span id="viewFestival"></span></p>
+                <p id="viewDescription"></p>
             </div>
-            <div class="banner-image">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ7_YIMyaa_kPaim4VONEsujsWZKEYNVdOgA&s" alt="Tribal Festivals">
-                <div class="banner-description">Celebrate the Vibrant Festivals of Bukidnon</div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="deleteBtn">Delete</button>
+                <button class="btn btn-warning" id="editBtn" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Modal for Editing -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Timeline</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editIndex">
+                        <div class="mb-3">
+                            <label for="editTitle" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="editTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDate" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="editDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editFestival" class="form-label">Festival</label>
+                            <input type="text" class="form-control" id="editFestival" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editImage" class="form-label">Image</label>
+                            <input type="file" class="form-control" id="editImage" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <section id="about">
-        <h2>About Us</h2>
-        <p>We are committed to documenting and showcasing the diverse heritage of Bukidnon's Indigenous Peoples. Our mission is to educate, inspire, and connect people through the timeless stories of the region's tribal communities, fostering inclusion and amplifying the voices of marginalized groups to promote equality and social justice.</p>
-    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const calendarEl = document.getElementById("calendar");
+        const monthYearEl = document.getElementById("monthYear");
+        const prevMonthBtn = document.getElementById("prevMonth");
+        const nextMonthBtn = document.getElementById("nextMonth");
 
-    <section id="features">
-        <h2>Why Explore with Us?</h2>
-        <div class="features">
-            <div class="feature-card">
-                <img src="assets/img/cultural.png" alt="Cultural Preservation">
-                <h3>Cultural Preservation</h3>
-                <p>Support the preservation of Bukidnon's rich tribal traditions and practices.</p>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        const storedData = JSON.parse(localStorage.getItem("timelineData")) || [];
+
+        function renderCalendar(month, year) {
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    calendarEl.innerHTML = '<div class="header" style="background-color:red;">Sun</div><div class="header">Mon</div><div class="header">Tue</div><div class="header">Wed</div><div class="header">Thu</div><div class="header">Fri</div><div class="header" style="background-color:yellow; color:black;">Sat</div>';
+
+    for (let i = 0; i < firstDay; i++) {
+        calendarEl.innerHTML += '<div class="calendar-day hidden"></div>';
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const formattedDate = date.toLocaleDateString('en-CA'); // Local date in 'YYYY-MM-DD'
+
+        const dayData = storedData.filter(item => item.date === formattedDate);
+        let timelineTitles = dayData.map(item => `<div class="timeline">${item.title}</div>`).join("");
+
+        calendarEl.innerHTML += `
+            <div class="calendar-day" data-date="${formattedDate}">
+                <div class="date">${day}</div>
+                ${timelineTitles}
             </div>
-            <div class="feature-card">
-                <img src="assets/img/map.png" alt="Heritage Locations">
-                <h3>Heritage Locations</h3>
-                <p>Discover key landmarks and places of significance to Bukidnon's tribes.</p>
-            </div>
-            <div class="feature-card">
-                <img src="assets/img/community.png" alt="Community Engagement">
-                <h3>Community Engagement</h3>
-                <p>Connect with tribal communities and learn about their way of life.</p>
-            </div>
-        </div>
-    </section>
+        `;
+    }
 
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <h2>Login</h2>
-        <form id="loginForm">
-            <input type="email" id="loginEmail" placeholder="Email" required>
-            <input type="password" id="loginPassword" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <span class="link" id="toSignUp">Don't have an account? Sign up</span>
-    </div>
+    monthYearEl.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    <!-- Sign Up Modal -->
-    <div class="modal" id="signUpModal">
-        <h2>Sign Up</h2>
-        <form id="signUpForm">
-            <input type="text" id="signUpName" placeholder="Name" required>
-            <input type="email" id="signUpEmail" placeholder="Email" required>
-            <input type="password" id="signUpPassword" placeholder="Password" required>
-            <button type="submit">Sign Up</button>
-        </form>
-        <span class="link" id="toLogin">Already have an account? Login</span>
-    </div>
+    document.querySelectorAll('.calendar-day').forEach(day => {
+        day.addEventListener('click', function () {
+            const selectedDate = this.getAttribute('data-date');
+            showTimelineModal(selectedDate);
+        });
+    });
+}
 
-    <div class="overlay" id="overlay"></div>
-    <footer>
-        &copy; 2024 Tribal Heritage Timeline of Bukidnon. All rights reserved.
-    </footer>
 
-    <script src="assets/js/banner.js"></script>
-    <script src="assets/js/modal.js"></script>
+function showTimelineModal(date) {
+    const dayData = storedData.find(item => item.date === date);
+    if (dayData) {
+        document.getElementById('viewImage').src = dayData.image;
+        document.getElementById('viewTitle').textContent = dayData.title;
+
+        const localDateString = new Date(dayData.date).toLocaleDateString('en-CA'); // Format as 'YYYY-MM-DD'
+        document.getElementById('viewDate').textContent = localDateString;
+
+        document.getElementById('viewFestival').textContent = dayData.festival;
+        document.getElementById('viewDescription').textContent = dayData.description;
+        document.getElementById('deleteBtn').onclick = function () {
+            deleteTimeline(dayData);
+        };
+        document.getElementById('editBtn').onclick = function () {
+            loadEditForm(dayData);
+        };
+        new bootstrap.Modal(document.getElementById('viewModal')).show();
+    }
+}
+
+
+function deleteTimeline(data) {
+    // Show confirmation alert before proceeding
+    const confirmation = confirm("Are you sure you want to delete this data?");
+    if (confirmation) {
+        // Find the index of the data to be deleted
+        const index = storedData.findIndex(item => item.date === data.date && item.title === data.title);
+        
+        // If found, remove the item and update local storage
+        if (index !== -1) {
+            storedData.splice(index, 1);
+            localStorage.setItem('timelineData', JSON.stringify(storedData));
+            renderCalendar(currentMonth, currentYear);  // Re-render the calendar
+            new bootstrap.Modal(document.getElementById('viewModal')).hide();  // Close the modal
+
+            // Show success alert
+            alert("Data successfully deleted!");
+        }
+    }
+}
+
+
+        function loadEditForm(data) {
+    document.getElementById('editIndex').value = data.date;
+    document.getElementById('editTitle').value = data.title;
+    
+    // Adjust the date for the local timezone
+    const localDate = new Date(data.date);
+    const localDateString = localDate.toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
+    
+    document.getElementById('editDate').value = localDateString;
+    document.getElementById('editFestival').value = data.festival;
+    document.getElementById('editDescription').value = data.description;
+}
+
+
+        renderCalendar(currentMonth, currentYear);
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderCalendar(currentMonth, currentYear);
+        });
+
+        // Optional: Add new timeline data via form submission
+        const editForm = document.getElementById("editForm");
+editForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Collect the updated data
+    const updatedData = {
+        title: document.getElementById("editTitle").value,
+        date: document.getElementById("editDate").value,
+        festival: document.getElementById("editFestival").value,
+        description: document.getElementById("editDescription").value,
+        image: document.getElementById("editImage").files[0] ? URL.createObjectURL(document.getElementById("editImage").files[0]) : ''
+    };
+
+    // Get the index of the data to be updated
+    const editIndex = document.getElementById("editIndex").value;
+    const index = storedData.findIndex(item => item.date === editIndex);
+
+    if (index !== -1) {
+        // Update the data in the stored array
+        storedData[index] = updatedData;
+        
+        // Save the updated data in local storage
+        localStorage.setItem("timelineData", JSON.stringify(storedData));
+
+        // Re-render the calendar
+        renderCalendar(currentMonth, currentYear);
+
+        // Alert the user that the data has been saved
+        alert("Data successfully saved!");
+
+        // Hide the modal after saving the data
+        new bootstrap.Modal(document.getElementById("editModal")).hide();
+    }
+});
+
+
+    </script>
+<script src="assets/js/dashboard.js"></script>
+
 </body>
+
 </html>
