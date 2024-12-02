@@ -100,10 +100,14 @@
 
             // Convert image to a base64 string
             const reader = new FileReader();
+            // OOP Element: Encapsulation and use of objects
+           // It provides methods to encapsulate and manage file-related operations.
+
             reader.onload = function (event) {
                 const imageBase64 = event.target.result;
 
                 // Create content object
+                // The newContent object encapsulates the related data into a single unit, representing a piece of content.
                 const newContent = { title, date, festival, description, image: imageBase64 };
 
                 // Get existing data from localStorage
@@ -118,7 +122,7 @@
                 // Redirect to dashboard.html
                 window.location.href = "dashboard.html";
             };
-
+             // The readAsDataURL method encapsulates the functionality to read a file as a base64 string.
             reader.readAsDataURL(imageInput); // Read the uploaded image
         });
     </script>

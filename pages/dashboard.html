@@ -121,14 +121,20 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // `document` is an object, and `addEventListener` is a method encapsulated within it.
+           // This demonstrates encapsulation and event-driven programming.
+
             const cardsContainer = document.getElementById("cards-container");
             const searchBar = document.getElementById("search-bar");
 
             // Retrieve data from localStorage
+            // `localStorage` is an object provided by the browser. Methods like `getItem` and `setItem` encapsulate data management functionality.
             const storedData = JSON.parse(localStorage.getItem("contentData")) || [];
 
             // Function to display cards
             function displayCards(data) {
+                 // `cardsContainer` is a DOM object with methods like `innerHTML` and `appendChild` encapsulating behavior.
+
                 cardsContainer.innerHTML = "";
 
                 data.forEach((content, index) => {
@@ -152,9 +158,11 @@
 
                 // Add delete functionality
                 document.querySelectorAll(".delete-btn").forEach((button) => {
+
+                     // Each `button` is an object with methods like `addEventListener`.
                     button.addEventListener("click", function () {
                         const index = this.getAttribute("data-index");
-                        storedData.splice(index, 1);
+                        storedData.splice(index, 1); // Encapsulation of array manipulation.
                         localStorage.setItem("contentData", JSON.stringify(storedData));
                         displayCards(storedData);
                     });
@@ -190,10 +198,11 @@
                             const imageInput = document.getElementById("editImage");
                             if (imageInput.files && imageInput.files[0]) {
                                 const reader = new FileReader();
+                                // The `FileReader` object encapsulates functionality for reading files.
                                 reader.onload = function (e) {
-                                    content.image = e.target.result; // Store the base64 image
+                                    content.image = e.target.result; // Encapsulation of data reading functionality.
                                     localStorage.setItem("contentData", JSON.stringify(storedData));
-                                    displayCards(storedData); // Re-display the updated cards
+                                    displayCards(storedData);  // Encapsulation in `displayCards`.
                                     
                                     // Show success alert and close modal
                                     alert("Changes saved successfully!");
@@ -221,6 +230,8 @@
 
             // Search functionality
             searchBar.addEventListener("input", function () {
+                // OOP Element: Filtering and Array Methods
+                
                 const query = searchBar.value.toLowerCase();
                 const filteredData = storedData.filter((content) => {
                     return (

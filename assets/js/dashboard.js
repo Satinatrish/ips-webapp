@@ -20,6 +20,10 @@ hamburger.addEventListener('click', () => {
     sidebar.classList.toggle('sidebar-hidden');
     content.classList.toggle('content-expanded');
 });
+// The `hamburger`, `sidebar`, and `content` elements are DOM objects.
+// The `addEventListener` and `classList.toggle` methods are object-oriented features,
+// encapsulating behavior related to events and class manipulation.
+
 
 // Search functionality
 const searchBar = document.getElementById('search-bar');
@@ -38,6 +42,11 @@ searchBar.addEventListener('input', function () {
         }
     }
 });
+// The `cardsContainer` and `cards` use object-oriented DOM manipulation APIs.
+// The `getElementsByClassName` method returns a collection of objects representing the elements,
+// allowing iteration and interaction.
+
+
 // Add event listener to the logout link
 document.getElementById('logout-link').addEventListener('click', function(event) {
 // Prevent the default action (navigation)
